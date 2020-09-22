@@ -1,36 +1,44 @@
-var fiveDays = [{ date: "date", icon: "icon", temp: "temp", humidity: "humidity" },
-{ date: "date", icon: "icon", temp: "temp", humidity: "humidity" },
-{ date: "date", icon: "icon", temp: "temp", humidity: "humidity" },
-{ date: "date", icon: "icon", temp: "temp", humidity: "humidity" },
-{ date: "date", icon: "icon", temp: "temp", humidity: "humidity" }]
+var fiveDays = [{ date: "date", icon: "01n", temp: "temp", humidity: "humidity" },
+{ date: "date", icon: "01n", temp: "temp", humidity: "humidity" },
+{ date: "date", icon: "01n", temp: "temp", humidity: "humidity" },
+{ date: "date", icon: "01n", temp: "temp", humidity: "humidity" },
+{ date: "date", icon: "01n", temp: "temp", humidity: "humidity" }]
 
 console.log("five days: ", fiveDays)
 
-var recentSearches = ["Atlanta", "Everett", "Chicago", "Belize",]
+var recentSearches = []
 
-var todaysWeather = { city: "City", date: "date", icon: "icon", temp: "temp", humidity: "humidity", wind: "wind speed", uv: "UV index" }
+var todaysWeather = { city: "City", date: "date", icon: "01n", temp: "temp", humidity: "humidity", wind: "wind speed", uv: "UV index" }
 var currentCity = { city: "spokane", lon: "", lat: "", timezone: "" };
-$("#search-btn").on("click", function (event) {
-    event.preventDefault();
-    var input = $("#search-input").val().trim();
-    if (!input) return;
-    currentCity.city = input;
-    getLonLat()
-})
+
+
 //Set click event for unordered list
 $(document).on("click", "button", function (event) {
     event.preventDefault();
     console.log("button clicked!")
-    var input;
-    if ($(this).attr("id") === "search-input") {
+    var input = "";
+    console.log($(this))
+    if ($(this).attr("id") === "search-btn") {
         input = $("#search-input").val().trim();
+        console.log(input);
         if (!input) return;
-    } else{
+    } else {
         input = $(this).attr("data-city")
+        console.log("if failed", input)
     }
     currentCity.city = input;
     getLonLat()
 })
+
+function checkLocalStorage(){
+    if(localStorage.getItem("lastCity") != null){
+        
+        currentCity.city = localStorage.getItem("lastCity");
+    
+        getLonLat();
+    }
+}
+
 
 function getLonLat() {
     var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity.city}&appid=fa30c4f3cf90208498e461891e75dd7f`
@@ -55,6 +63,7 @@ function getWeather() {
     }).then(function (response) {
 
         todaysWeather.date = moment.unix(response.current.dt).format("L");
+        todaysWeather.city = currentCity.city.charAt(0).toUpperCase() + currentCity.city.slice(1);
         todaysWeather.temp = response.current.temp;
         todaysWeather.wind = response.current.wind_speed;
         todaysWeather.humidity = response.current.humidity;
@@ -69,13 +78,22 @@ function getWeather() {
             fiveDays[j].humidity = response.daily[i].humidity;
         }
         console.log({ fiveDays, currentCity, todaysWeather })
+        updateRecentSearches()
         clearAll()
         populateCards()
         populateRecentSearches()
         populateCurrentDay()
 
     })
-
+    function updateRecentSearches() {
+        localStorage.setItem("lastCity", todaysWeather.city);
+        if (recentSearches.indexOf(todaysWeather.city) === -1) {
+            if (recentSearches.length > 7) {
+                recentSearches.pop();
+            }
+            recentSearches.unshift(todaysWeather.city);
+        }
+    }
 
 
 }
@@ -91,10 +109,10 @@ function clearAll() {
 function populateCards() {
     for (var i = 0; i < fiveDays.length; i++) {
         card = $("<div class='card'>");
-        card.append("<p>" + fiveDays[i].date + "<p>");
-        card.append("<p>" + fiveDays[i].icon + "<p>");
-        card.append("<p>" + "Temp " + fiveDays[i].temp "°"+ "<p>");
-        card.append("<p>" + "Humidity " +fiveDays[i].humidity + "<p>");
+        card.append("<p>" + "<strong>" + fiveDays[i].date + "</strong>" + "</p>");
+        card.append(`<img src='http://openweathermap.org/img/wn/${fiveDays[i].icon}.png' width='25' height='25'>`);
+        card.append("<p>" + "Temp: " + fiveDays[i].temp + "°" + "</p>");
+        card.append("<p>" + "Humidity: " + fiveDays[i].humidity + "%" + "</p>");
 
         console.log("id", $(`#day${i + 1}`))
 
@@ -107,7 +125,7 @@ function populateRecentSearches() {
     var list = $(".dynamic-buttons");
 
     for (var j = 0; j < recentSearches.length; j++) {
-        var listItem = $("<button class='btn btn-secondary col-6'>");
+        var listItem = $("<button class='btn btn-outline-dark col-6'>");
         listItem.text(recentSearches[j]);
         listItem.attr("data-city", recentSearches[j]);
         list.append(listItem);
@@ -116,18 +134,18 @@ function populateRecentSearches() {
 
 function populateCurrentDay() {
     var currentDay = $("#current-day");
-    for (var key in todaysWeather) {
-        if (key === "city") {
-            currentDay.append("<h2>" + todaysWeather[key] + "<h2>")
-        } else {
+    currentDay.append("<h2>" + todaysWeather.city +  "</h2>")
+    $("head").append(`<style> h2::after{content: ' ${todaysWeather.date}'}`)
+    currentDay.append(`<img src='http://openweathermap.org/img/wn/${todaysWeather.icon}.png'>`);
+    currentDay.append("<p>" + "Temp: " + todaysWeather.temp + "°" + "</p>");
+    currentDay.append("<p>" + "Humidity " + todaysWeather.humidity + "%" + "</p>");
+    currentDay.append("<p>" + "Wind Speed: " + todaysWeather.wind + "</p>");
+    currentDay.append("<p>" + "UV Index: " + "<span id='uv'>" + todaysWeather.uv + "</span>" + "</p>");
 
-            currentDay.append("<p>" + todaysWeather[key] + "<p>");
-        }
 
-
-    }
 }
 
+checkLocalStorage()
 populateCards()
 populateRecentSearches()
 populateCurrentDay()

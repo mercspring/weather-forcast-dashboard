@@ -11,26 +11,35 @@
 </head>
 
 <body>
-    <div class="container bg-danger">
+    <div class="container">
+        <header class="row">
+            <div class="col-12">
+                <h1> Weather Dashboard </h1>
+                <p> Input a city to get the weather.</p>
+            </div>
+        </header>
+        <hr>
         <div class="row no-gutters">
-            <div class="col-md-4 bg-primary" id="current-day"></div>
-            <div class="col-md-5 bg-info">
+            <div class="col-lg-4" id="current-day"></div>
+            <div class="col-lg-5">
                 <div class="row no-gutters justify-content-around">
                     <div class="col-sm-3" id="day1"></div>
                     <div class="col-sm-3" id="day2"></div>
                     <div class="col-sm-3" id="day3"></div>
                 </div>
                 <div class="row no-gutters justify-content-around">
+                    <div class="col-sm-1"></div>
                     <div class="col-sm-3" id="day4"></div>
                     <div class="col-sm-3" id="day5"></div>
+                    <div class="col-sm-1" ></div>
                 </div>
             </div>
-            <div class="col-md-3" id="recent-searches">
+            <div class="col-lg-3" id="recent-searches">
                 <form class="form-inline">
                     <label class="sr-only" for="inlineFormInputName2">Name</label>
                     <input type="text" class="form-control mb-2 w-75" id="search-input"
                         placeholder="Enter City">
-                    <button id="search-btn" class="btn btn-primary mb-2">🔍</button>
+                    <button id="search-btn" class="btn btn-outline-dark mb-2">🔍</button>
 
                 </form>
                 <div class="dynamic-buttons">
