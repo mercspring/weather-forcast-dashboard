@@ -139,7 +139,7 @@ function populateCurrentDay() {
     currentDay.append(`<img src='http://openweathermap.org/img/wn/${todaysWeather.icon}.png'>`);
     currentDay.append("<p>" + "Temp: " + todaysWeather.temp + "°" + "</p>");
     currentDay.append("<p>" + "Humidity " + todaysWeather.humidity + "%" + "</p>");
-    currentDay.append("<p>" + "Wind Speed: " + todaysWeather.wind + "</p>");
+    currentDay.append("<p>" + "Wind Speed: " + todaysWeather.wind + " mph" + "</p>");
     currentDay.append("<p>" + "UV Index: " + "<span id='uv' class='" + colorUV() + "'>" + todaysWeather.uv + "</span>" + "</p>");
 
 
