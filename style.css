@@ -26,3 +26,27 @@ h2::after{
 .btn{
     overflow: hidden;
 }
+.uv-green{
+    background-color: green;
+    color: white;
+}
+.uv-red{
+    color: white;
+    background-color: red;
+}
+
+.uv-orange{
+
+    background-color: orange;
+}
+.uv-yellow{
+
+    background-color: yellow;
+}
+.uv-purple{
+    color: white;
+    background-color: purple;
+}
+#search-input{
+    background-color: lavender;
+}

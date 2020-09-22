@@ -30,11 +30,11 @@ $(document).on("click", "button", function (event) {
     getLonLat()
 })
 
-function checkLocalStorage(){
-    if(localStorage.getItem("lastCity") != null){
-        
+function checkLocalStorage() {
+    if (localStorage.getItem("lastCity") != null) {
+
         currentCity.city = localStorage.getItem("lastCity");
-    
+
         getLonLat();
     }
 }
@@ -134,15 +134,23 @@ function populateRecentSearches() {
 
 function populateCurrentDay() {
     var currentDay = $("#current-day");
-    currentDay.append("<h2>" + todaysWeather.city +  "</h2>")
+    currentDay.append("<h2>" + todaysWeather.city + "</h2>")
     $("head").append(`<style> h2::after{content: ' ${todaysWeather.date}'}`)
     currentDay.append(`<img src='http://openweathermap.org/img/wn/${todaysWeather.icon}.png'>`);
     currentDay.append("<p>" + "Temp: " + todaysWeather.temp + "°" + "</p>");
     currentDay.append("<p>" + "Humidity " + todaysWeather.humidity + "%" + "</p>");
     currentDay.append("<p>" + "Wind Speed: " + todaysWeather.wind + "</p>");
-    currentDay.append("<p>" + "UV Index: " + "<span id='uv'>" + todaysWeather.uv + "</span>" + "</p>");
+    currentDay.append("<p>" + "UV Index: " + "<span id='uv' class='" + colorUV() + "'>" + todaysWeather.uv + "</span>" + "</p>");
 
 
+}
+
+function colorUV() {
+    if (todaysWeather.uv < 3) return "uv-green"
+    else if (todaysWeather.uv < 6) return "uv-yellow"
+    else if (todaysWeather.uv < 8) return "uv-orange"
+    else if (todaysWeather.uv < 10) return "uv-red"
+    else return "uv-purple"
 }
 
 checkLocalStorage()
